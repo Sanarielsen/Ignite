@@ -13,7 +13,7 @@ export function Post({ author, content, publishedAt }) {
         2,
     ])
 
-    const [newCommentText, setNewCommentText] = useState(''  )
+    const [newCommentText, setNewCommentText] = useState('')
 
     const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
         locale: ptBR,
@@ -33,6 +33,7 @@ export function Post({ author, content, publishedAt }) {
 
     function handleNewCommentChange() {
 
+        event.target.setCustomValidity('')
         setNewCommentText(event.target.value)
     }
 
@@ -44,6 +45,13 @@ export function Post({ author, content, publishedAt }) {
         } )
         setComments(commentsWithoutDeletedOne)
     }
+
+    function handleNewCommentInvalid() {
+
+        event.target.setCustomValidity('Esse campo é obrigatório')
+    }
+
+    const isNewCommentEmpty = newCommentText.length == 0
 
     return (
 
@@ -84,13 +92,17 @@ export function Post({ author, content, publishedAt }) {
                 <strong> Deixe seu Feedback </strong>
                 <textarea
                     name="txaComentario"
-                    onChange={handleNewCommentChange}
                     value={newCommentText}
                     placeholder='Deixe seu comentário'
+                    onChange={handleNewCommentChange}
+                    onInvalid={handleNewCommentInvalid}
+                    required
                 />
 
                 <footer>
-                    <button type="submit"> Publicar </button>
+                    <button type="submit" disabled={isNewCommentEmpty}> 
+                        Publicar 
+                    </button>
                 </footer>
             </form>
 
